@@ -38,3 +38,7 @@ telephone VARCHAR(20) NOT NULL,
 -- +33654345654
 -- 003365434565
 -- +1
+
+-- Voir la description de la table
+-- DESC <nom_table> ou DESCRIBE <nom_table>
+DESC clients;
