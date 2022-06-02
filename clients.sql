@@ -11,4 +11,10 @@ SHOW DATABASES;
 
 CREATE DATABASE ventes;
 
--- 3 Création de la table clients
+
+-- 3. Utilisation/selectionner une base de données
+
+--USE <nom base de donnée>
+USE ventes
+
+-- 4. Création de la table clients
