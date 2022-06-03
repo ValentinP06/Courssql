@@ -40,3 +40,4 @@ SELECT MAX(units_sold)AS ventes_plus_elevee FROM telephones;
 -- Ventes les moins elevées
 SELECT MIN(units_sold)AS ventes_moins_elevee FROM telephones;
 
+

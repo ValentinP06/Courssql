@@ -137,3 +137,153 @@ SELECT name, manufacturer FROM telephones where price > 149 AND price < 201;
 -- *=> Lister tous les téléphones de marque samsung et Apple
 
 SELECT * FROM telephones WHERE manufacturer='Apple' OR manufacturer='Samsung';
+
+
+--COURS DU 03 JUIN
+
+-- creaton de la table telephone 
+
+CREATE table telephones (
+id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+numero VARCHAR (20) NOT NULL,
+id_client INTEGERR,
+FOREIGN KEY(id_client) REFERENCES clients(id) ON DELETE CASCADE on update CASCADE
+);
+
+-- Supprimer une colonne
+
+ALTER TABLE clients DROP COLUMN telephones;
+
+-- Supprimer une table
+
+ DROP TABLE clients;
+
+-- Supprimer une base de données
+
+ DROP DATABASE sales;
+
+
+ INSERT INTO telephones(numero,id_client) values("0636363336",1),("0637363336",1),("0736363336",1),("0638863336",2),("0636360946",2),("0636364446",3),("0637380336",4),("0708463336",4),("0636363339",5),("0636222236",6),("0636363333",6),("0788363336",6),("0639993336",6);
+
+-- Join query
+
+-- Afficher tous les numéros de téléphone de tous les clients
+
+ -- table sollicité : clients et téléphones
+
+
+SELECT clients.prenom, clients.nom, clients.email, telephones.numero
+FROM clients Join telephones ON clients.id=telephones.id_client;
+
+-- Jointure et concatenation
+
+SELECT CONCAT (clients.prenom," ", clients.nom) as nom, clients.email, telephones.numero
+FROM clients Join telephones ON clients.id=telephones.id_client;
+
+--Jointure et concaténation
+
+SELECT CONCAT(clients.prenom," ",clients.nom) AS nom, clients.email,telephones.numero FROM clients JOIN telephones ON clients.id=telephones.id_client WHERE clients.id=1;
+
+
+-- TP2 du 3 juin 2022
+CREATE DATABASE TP2;
+USE DATABASE TP2;
+
+CREATE TABLE orders(
+id INTEGER AUTO_INCREMENT PRIMARY KEY,
+typePresta VARCHAR(50),
+designation VARCHAR(50),
+clientId INTEGER,
+nbDays INTEGER,
+unitPrice INTEGER,
+State INTEGER
+);
+
+CREATE TABLE orders(id INTEGER PRIMARY KEY, typePresta VARCHAR, designation VARCHAR, clientId INTEGER, nbDays INTEGER, unitPrice INTEGER, states INTEGER);
+
+INSERT INTO orders(id, typePresta, designation, clientId, nbDays,unitPrice, State) VALUES
+(1, "Formation", "Angular init", 2, 3, 1200, 0),
+(2, "Formation", "React avancé ", 2, 3, 1000, 2),
+(3, "Coaching", "React Techlead", 1, 20, 900, 2),
+(4, "Coaching", "Nest.jsTechlead", 1, 50,800, 1),
+(5, "Coaching", "ReactTechlead", 3, 60,4000, 0),
+(6, "Coaching", "Jakarta EE", 3, 70, 5000, 1),
+(7, "Coaching", "AngularTechlead", 4, 80, 87, 2);
+
+INSERT INTO orders(id, typePresta, designation, clientId, nbDays,unitPrice, State) VALUES
+(8, "Coaching", "LEGO init", 2, 3, 12500, 0),
+(9, "Coaching", "DEV avancé ", 2, 3, 10, 2),
+(10, "Coaching", "UX Techlead", 1, 20, 900, 2);
+
+-- Cration de la vue pour voir le total avec les taxes
+
+CREATE VIEW total_taxe AS SELECT id, typePresta, designation, clientId, nbDays,unitPrice, State, (nbDays*unitPrice) AS total_taxe_exclued, (nbDays*unitPrice*1.2) AS Total_taxe FROM orders;
+
+SELECT * FROM total_taxe;
+
+-- Création de la table clients
+
+CREATE TABLE clients(
+id INTEGER AUTO_INCREMENT PRIMARY KEY,
+companyName VARCHAR(50),
+firstName VARCHAR(50),
+lastName VARCHAR(50),
+email VARCHAR(50),
+phone VARCHAR(50),
+adress VARCHAR(50),
+zipCode VARCHAR(50),
+city VARCHAR(50),
+country VARCHAR(50),
+state INTEGER
+);
+
+
+INSERT INTO clients (
+    id,
+    companyName,
+    firstName,
+    lastName,
+    email,
+    phone,
+    adress,
+    zipCode,
+    city,
+    country,
+    state
+) VALUES 
+
+(1,"Capgemini" ,"Fabrice","Martin","martin@mail.com","06 56 85 84 33","abc","xyz","Nantes","France",0),
+(2,"sopra" ,"ludo","hihi","ludo@mail.com","06 00 11 22 33","def","ijk","Stras","France",1),
+(3,"msft" ,"titi","once","titi@mail.com","06 00 11 22 33","def","ijk","Stras","France",2),
+(4,"sopra" ,"jack","thecat","jackcat@mail.com","06 00 11 22 33","def","ijk","Stras","France",0);
+
+SELECT orders.typePresta, orders.designation, orders.unitPrice, clients.companyName, clients.firstName, clients.lastName, clients.email
+FROM orders Join clients ON clients.id=orders.clientId;
+
+-- *=> Afficher toutes les formations sollicités par le client M2i formation(sopra)
+
+
+SELECT orders.typePresta, orders.designation, clients.companyName
+FROM orders Join clients ON clients.id=orders.clientId WHERE companyName="sopra";
+
+--*=> Afficher les noms et contacts de tous les contacts des clients qui ont sollicité un coaching
+
+SELECT orders.typePresta, orders.designation, clients.lastName, clients.email
+FROM orders Join clients ON clients.id=orders.clientId WHERE typePresta="Coaching";
+
+-- *=> Afficher les noms et contacts de tous les contacts des clients qui ont sollicité un coaching
+--     pour les accompagnements React.js
+
+SELECT orders.typePresta, orders.designation, clients.lastName, clients.email
+FROM orders Join clients ON clients.id=orders.clientId WHERE designation="ReactTechlead";
+
+-- *=> Pour chacune des demandes de formation, afficher le prix UHT et prix TTC en se basant sur le 
+--     unité Price(TJM) et le nombre de jours de prestation tout en sachant que la TVA est de 20%.
+CREATE VIEW Totaltaxe AS SELECT id, typePresta, designation, nbDays,unitPrice, (nbDays*unitPrice) AS "PRIX UHT", (nbDays*unitPrice*1.2) AS "Prix TTC" FROM orders;
+
+SELECT * FROM totaltaxe;
+
+-- *=> Lister toutes les prestations qui sont confirmés et qui vont rapporter plus 30.000€
+
+SELECT orders.typePresta, orders.designation, orders.state, clients.companyName
+FROM orders Join clients ON clients.id=orders.clientId WHERE (nbDays*unitPrice*1.2)>30000 AND State=2;
