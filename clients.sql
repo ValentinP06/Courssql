@@ -141,7 +141,7 @@ SELECT * FROM telephones WHERE manufacturer='Apple' OR manufacturer='Samsung';
 
 --COURS DU 03 JUIN
 
--- creaton de la table telephone 
+-- creation de la table telephone 
 
 CREATE table telephones (
 id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -186,8 +186,12 @@ SELECT CONCAT(clients.prenom," ",clients.nom) AS nom, clients.email,telephones.n
 
 
 -- TP2 du 3 juin 2022
+
+-- creer la base de données
 CREATE DATABASE TP2;
 USE DATABASE TP2;
+
+--créer la table orders 
 
 CREATE TABLE orders(
 id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -199,7 +203,7 @@ unitPrice INTEGER,
 State INTEGER
 );
 
-CREATE TABLE orders(id INTEGER PRIMARY KEY, typePresta VARCHAR, designation VARCHAR, clientId INTEGER, nbDays INTEGER, unitPrice INTEGER, states INTEGER);
+-- CREATE TABLE orders(id INTEGER PRIMARY KEY, typePresta VARCHAR, designation VARCHAR, clientId INTEGER, nbDays INTEGER, unitPrice INTEGER, states INTEGER);
 
 INSERT INTO orders(id, typePresta, designation, clientId, nbDays,unitPrice, State) VALUES
 (1, "Formation", "Angular init", 2, 3, 1200, 0),
@@ -215,7 +219,10 @@ INSERT INTO orders(id, typePresta, designation, clientId, nbDays,unitPrice, Stat
 (9, "Coaching", "DEV avancé ", 2, 3, 10, 2),
 (10, "Coaching", "UX Techlead", 1, 20, 900, 2);
 
--- Cration de la vue pour voir le total avec les taxes
+-- Voirs la table orders
+SELECT * FROM orders;
+
+-- Cration de la vue pour afficher le total avec les taxes et taxes avec TVA 20%
 
 CREATE VIEW total_taxe AS SELECT id, typePresta, designation, clientId, nbDays,unitPrice, State, (nbDays*unitPrice) AS total_taxe_exclued, (nbDays*unitPrice*1.2) AS Total_taxe FROM orders;
 
@@ -237,6 +244,7 @@ country VARCHAR(50),
 state INTEGER
 );
 
+-- Insertion des données dans la table clients
 
 INSERT INTO clients (
     id,
@@ -253,18 +261,20 @@ INSERT INTO clients (
 ) VALUES 
 
 (1,"Capgemini" ,"Fabrice","Martin","martin@mail.com","06 56 85 84 33","abc","xyz","Nantes","France",0),
-(2,"sopra" ,"ludo","hihi","ludo@mail.com","06 00 11 22 33","def","ijk","Stras","France",1),
-(3,"msft" ,"titi","once","titi@mail.com","06 00 11 22 33","def","ijk","Stras","France",2),
+(2,"M2iFormation" ,"ludo","hihi","ludo@mail.com","06 00 11 22 33","def","ijk","Stras","France",1),
+(3,"ATOS" ,"titi","once","titi@mail.com","06 00 11 22 33","def","ijk","Stras","France",2),
 (4,"sopra" ,"jack","thecat","jackcat@mail.com","06 00 11 22 33","def","ijk","Stras","France",0);
+
+-- *=> Ecrire une requête pour créer ces 2 tables en prenant en compte la jointure
 
 SELECT orders.typePresta, orders.designation, orders.unitPrice, clients.companyName, clients.firstName, clients.lastName, clients.email
 FROM orders Join clients ON clients.id=orders.clientId;
 
--- *=> Afficher toutes les formations sollicités par le client M2i formation(sopra)
+-- *=> Afficher toutes les formations sollicités par le client M2i formation
 
 
 SELECT orders.typePresta, orders.designation, clients.companyName
-FROM orders Join clients ON clients.id=orders.clientId WHERE companyName="sopra";
+FROM orders Join clients ON clients.id=orders.clientId WHERE companyName="M2iFormation";
 
 --*=> Afficher les noms et contacts de tous les contacts des clients qui ont sollicité un coaching
 
@@ -285,5 +295,8 @@ SELECT * FROM totaltaxe;
 
 -- *=> Lister toutes les prestations qui sont confirmés et qui vont rapporter plus 30.000€
 
-SELECT orders.typePresta, orders.designation, orders.state, clients.companyName
+SELECT orders.typePresta, orders.designation, orders.state
 FROM orders Join clients ON clients.id=orders.clientId WHERE (nbDays*unitPrice*1.2)>30000 AND State=2;
+
+
+ALTER TABLE clients MODIFY COLUMN State DECIMAL (0,1);
