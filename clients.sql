@@ -267,6 +267,8 @@ INSERT INTO clients (
 
 -- *=> Ecrire une requête pour créer ces 2 tables en prenant en compte la jointure
 
+ALTER TABLE orders ADD FOREIGN KEY(clientId) REFERENCES clients(id);
+
 SELECT orders.typePresta, orders.designation, orders.unitPrice, clients.companyName, clients.firstName, clients.lastName, clients.email
 FROM orders Join clients ON clients.id=orders.clientId;
 
@@ -274,24 +276,24 @@ FROM orders Join clients ON clients.id=orders.clientId;
 
 
 SELECT orders.typePresta, orders.designation, clients.companyName
-FROM orders Join clients ON clients.id=orders.clientId WHERE companyName="M2iFormation";
+FROM orders Join clients ON clients.id=orders.clientId WHERE companyName="M2iFormation" AND typePresta="Formation";
 
 --*=> Afficher les noms et contacts de tous les contacts des clients qui ont sollicité un coaching
 
-SELECT orders.typePresta, orders.designation, clients.lastName, clients.email
+SELECT orders.typePresta as prestation, orders.designation, clients.lastName AS nom, clients.email
 FROM orders Join clients ON clients.id=orders.clientId WHERE typePresta="Coaching";
 
 -- *=> Afficher les noms et contacts de tous les contacts des clients qui ont sollicité un coaching
 --     pour les accompagnements React.js
 
 SELECT orders.typePresta, orders.designation, clients.lastName, clients.email
-FROM orders Join clients ON clients.id=orders.clientId WHERE designation="ReactTechlead";
+FROM orders Join clients ON clients.id=orders.clientId WHERE designation="ReactTechlead" AND typePresta="coaching";
 
 -- *=> Pour chacune des demandes de formation, afficher le prix UHT et prix TTC en se basant sur le 
 --     unité Price(TJM) et le nombre de jours de prestation tout en sachant que la TVA est de 20%.
-CREATE VIEW Totaltaxe AS SELECT id, typePresta, designation, nbDays,unitPrice, (nbDays*unitPrice) AS "PRIX UHT", (nbDays*unitPrice*1.2) AS "Prix TTC" FROM orders;
+CREATE VIEW Totaldestaxes AS SELECT id, typePresta, designation, nbDays,unitPrice, (nbDays*unitPrice) AS "PRIX UHT", (nbDays*unitPrice*1.2) AS "Prix TTC" FROM orders WHERE typePresta="Formation";
 
-SELECT * FROM totaltaxe;
+SELECT * FROM totaldestaxes;
 
 -- *=> Lister toutes les prestations qui sont confirmés et qui vont rapporter plus 30.000€
 
