@@ -136,4 +136,4 @@ SELECT name, manufacturer FROM telephones where price > 149 AND price < 201;
 
 -- *=> Lister tous les téléphones de marque samsung et Apple
 
-SELECT * FROM telephones WHERE manufacturer='Apple' OR manufacturer='Samsung' ORDER BY price ASC;
+SELECT * FROM telephones WHERE manufacturer='Apple' OR manufacturer='Samsung';
