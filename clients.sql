@@ -353,3 +353,33 @@ SELECT manufacturer,SUM(price*units_sold) as chiffre_affaire FROM telephones  WH
 -- Utiliser une query dans une condition
 SELECT name, price FROM telephones WHERE price<(SELECT AVG(price) FROM telephones) ORDER BY price DESC;
 
+-----------------------------------
+CREATE DATABASE IF NOT EXISTS sales_poe_many2many;
+
+use sales_poe_many2many;
+
+CREATE TABLE IF NOT EXISTS clients(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(20) NOT NULL,
+    prenom VARCHAR(20) NOT NULL,
+    adresse_email VARCHAR(50) NOT NULL UNIQUE
+);
+
+
+
+CREATE TABLE IF NOT EXISTS produits(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    designation VARCHAR(50) NOT NULL,
+    prixUHT FLOAT NOT NULL,
+    prixTTC FLOAT GENERATED ALWAYS AS (prixUHT*1.2) STORED,
+    quantite_stock INT
+);
+
+
+CREATE TABLE IF NOT EXISTS achats(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_client INT,
+  id_produit INT NOT NULL,
+  FOREIGN KEY(id_client) REFERENCES clients(id) ON UPDATE CASCADE ON DELETE SET NULL,
+  FOREIGN KEY(id_produit) REFERENCES produits(id) ON UPDATE CASCADE ON DELETE RESTRICT
+);
