@@ -302,3 +302,54 @@ FROM orders Join clients ON clients.id=orders.clientId WHERE (nbDays*unitPrice*1
 
 
 
+----------------------
+-- cours du 7 juin 
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `clientId` int(11) NOT NULL,
+  `typePresta` varchar(100) NOT NULL,
+  `designation` varchar(100) NOT NULL,
+  `nbDays` int(11) NOT NULL,
+  `unitPrice` float NOT NULL,
+  `state` tinyint(1) NOT NULL,
+  `totalExcludeTaxe` float GENERATED ALWAYS AS (`nbDays` * `unitPrice`) STORED,
+  `totalWithTaxe` float GENERATED ALWAYS AS (`nbDays` * `unitPrice` * 1.2) STORED
+) 
+
+-- chaine qui comme par M2
+SELECT * FROM clients WHERE companyName LIKE "m2%";
+
+-- Chaine qui se termine par formation
+SELECT * FROM clients WHERE companyName LIKE "%formation";
+
+-- Recherche au mileu d'une chaine
+-- chris@sopra.com ==> ok
+-- jean@m2i.com ==> 
+-- sarah@sopra.fr ==> ok
+-- luc@sopra.edu ==> ok
+
+SELECT * FROM clients WHERE companyName LIKE "%sopra%"
+
+ 
+https://www.mysqltutorial.org/mysql-regular-expression-regexp.aspx
+
+SELECT * FROM telephones WHERE numero LIKE "+33%";
+
+-- Nombre de ventes pour tous les fabricant
+SELECT manufacturer,SUM(units_sold) FROM telephones GROUP BY manufacturer;
+
+-- CA par fabricant
+SELECT manufacturer,SUM(price*units_sold) as chiffre_affaire FROM telephones GROUP BY manufacturer;
+
+-- CA par fabricant dans l'ordre decroissant des CA
+SELECT manufacturer,SUM(price*units_sold) as chiffre_affaire FROM telephones GROUP BY manufacturer ORDER BY chiffre_affaire DESC;
+
+-- Toutes les ventes des marques qui ont réalisé un CA de plus de 20000000
+SELECT manufacturer,SUM(price*units_sold) as chiffre_affaire FROM telephones GROUP BY manufacturer HAVING chiffre_affaire>20000000;
+
+-- Mauvaise approche
+SELECT manufacturer,SUM(price*units_sold) as chiffre_affaire FROM telephones  WHERE chiffre_affaire>20000000 GROUP BY manufacturer;
+
+-- Utiliser une query dans une condition
+SELECT name, price FROM telephones WHERE price<(SELECT AVG(price) FROM telephones) ORDER BY price DESC;
+
