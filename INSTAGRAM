@@ -182,8 +182,8 @@ ON utilisateurs.id = commentaires.utilisateurid;
 
 -- 5 Pour chaque commentaire, afficher son contenu et l'url de la photo à laquel le commentaire a été ajouté
 
-SELECT commentaires.comments, photos.image, photos.description
-FROM commencommentaires.commentstaires 
+SELECT commentaires.comments, photos.image
+FROM commentaires 
 JOIN photos 
 ON photos.id = commentaires.photoid;
 
