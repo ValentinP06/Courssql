@@ -1,6 +1,3 @@
--- [photos]->[users]<-[commentaires]
--- 
-
 -- Crétion de la base de données
 
 CREATE DATABASE INSTAGRAM;
