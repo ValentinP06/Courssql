@@ -298,7 +298,7 @@ SELECT * FROM totaldestaxes;
 -- *=> Lister toutes les prestations qui sont confirmés et qui vont rapporter plus 30.000€
 
 SELECT orders.typePresta, orders.designation, orders.state
-FROM orders Join clients ON clients.id=orders.clientId WHERE (nbDays*unitPrice*1.2)>30000 AND State=2;
+FROM orders Join clients ON clients.id=orders.clientId WHERE (nbDays*unitPrice*1.2)>30000 AND orders.State="2";
 
 
-ALTER TABLE clients MODIFY COLUMN State DECIMAL (0,1);
+
