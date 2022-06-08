@@ -220,3 +220,16 @@ WHERE commentaires.photoid=photos.id;
 SELECT COUNT(*) FROM photos JOIN likes 
 ON photos.id = likes.photoid
 WHERE photos.id= 4;
+
+
+
+-- Trouvez le nombre de commentaires pour chaque photo où le photo_id est inférieur à 3 et la photo a plus de 2 commentaires
+
+SELECT photo.id, commentaires.id, 
+JOIN
+ON
+WHERE 
+
+
+
+
